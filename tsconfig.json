@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "target": "es2022",
+        "allowJs": true,
+        "moduleDetection": "force",
+        "isolatedModules": true,
+        "forceConsistentCasingInFileNames": true,
+        "noUncheckedIndexedAccess": true,
+        "module": "NodeNext",
+        "outDir": "dist",
+        "lib": [
+            "es2022",
+            "dom",
+            "dom.iterable"
+        ]
+    }
+}
