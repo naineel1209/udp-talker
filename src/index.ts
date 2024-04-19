@@ -1,6 +1,7 @@
-import dgram from "node:dgram";
 import fs from "fs";
+import dgram from "node:dgram";
 import path from "path";
+import cron from "node-cron";
 
 interface FileData {
     filename: string;
@@ -72,10 +73,6 @@ server.on("message", async (msg, rinfo) => {
         }
 
         //closing file stream if all data is received
-        if (fileData.currentbyte === fileData.filesize) {
-            fileStream.end();
-            console.log("File received successfully!");
-        }
 
         fileStream.on("error", (err) => {
             console.log("Error writing to file: ", err);
@@ -94,3 +91,25 @@ server.on("message", async (msg, rinfo) => {
 });
 
 server.bind(41234);
+
+//register a cron job to delete files older than 30mins
+cron.schedule("*/1 * * * *", (now) => { //every 5mins
+    console.log("Running cron job to delete files older than 2mins: ", now);
+
+    const dirPath = path.join(__dirname, "..", "rcvd-files");
+
+    const readDir = fs.readdirSync(dirPath);
+
+    readDir.forEach((file) => {
+        const filePath = path.join(dirPath, file);
+        const fileStat = fs.statSync(filePath);
+
+        if (fileStat.isFile() && (Date.now() - fileStat.mtimeMs) > 2 * 60 * 1000) {
+            fs.unlinkSync(filePath);
+            console.log("File deleted: ", file);
+        }
+    });
+}, {
+    runOnInit: true,
+    timezone: "Asia/Kolkata"
+});

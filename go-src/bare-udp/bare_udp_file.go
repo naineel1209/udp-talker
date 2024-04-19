@@ -8,6 +8,7 @@ import (
 	"net"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 type UdpFileStruct struct {
@@ -65,13 +66,17 @@ func UdpFile() {
 
 	fileSize := fileInfo.Size()
 
-	BUFFER_SIZE := 1024 * 2              //1MB
+	BUFFER_SIZE := 1024 * 10             //10KB
 	conn.SetWriteBuffer(BUFFER_SIZE + 1) // set the write buffer to 1MB
 
 	// read the file in chunks of 1024 bytes
 	buffer := make([]byte, BUFFER_SIZE)
 	readBytes := int64(0)
 
+	//start the timer
+	startTime := time.Now().Unix()
+
+	//send the file in chunks of 1024 bytes
 	for readBytes < fileSize {
 		read_n, err := file.Read(buffer)
 
@@ -81,7 +86,8 @@ func UdpFile() {
 		}
 
 		//read the first n bytes of the buffer
-		buffer = buffer[:read_n] // this is done to avoid sending the entire buffer of 1024 bytes
+		// this is done to avoid sending the entire buffer of 1024 bytes
+		buffer = buffer[:read_n]
 
 		//print the buffer
 		// fmt.Printf("Sending: %s\n", string(buffer))
@@ -130,4 +136,8 @@ func UdpFile() {
 			fmt.Println("ACK not received")
 		}
 	}
+
+	fmt.Printf("File sent successfully\n")
+	fmt.Printf("Total bytes sent: %d\n", readBytes)
+	fmt.Printf("Time taken: %v seconds\n", time.Now().Unix()-int64(startTime)) //convert the time to minutes in form of  - 1m30s
 }

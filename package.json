@@ -11,6 +11,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.12.7"
+    "@types/node": "^20.12.7",
+    "@types/node-cron": "^3.0.11"
+  },
+  "dependencies": {
+    "node-cron": "^3.0.3"
   }
 }

@@ -149,3 +149,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+**/files/
+**/files/*
+**/files/**/*
+**/rcvd-files/
